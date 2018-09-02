@@ -1,0 +1,62 @@
+public class MainActivity extends AppCompatActivity {
+
+    Button btningresar;
+    EditText etusu, etcon;
+
+    SQLite_OpenHelper helper = new SQLite_OpenHelper(this, "BD1", null, 1);
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        PantallaRegistro();
+
+        btningresar = findViewById(R.id.btn_entrar);
+        btningresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etusu = findViewById(R.id.et_usuinicio);
+                etcon = findViewById(R.id.et_coninicio);
+
+                //VALIDA QUE EL CAMPO CORREO NO ESTE VACIO
+                if(etusu.length() == 0){
+                    Toast.makeText(getApplicationContext(), "Debes ingresar un Correo", Toast.LENGTH_LONG).show();
+                }
+
+                // VALIDA QUE EL CAMPO CONTRASEÑA NO ESTE VACIO
+                if (etcon.length() ==0){
+                    Toast.makeText(getApplicationContext(), "Debes ingresar una Contraseña", Toast.LENGTH_LONG).show();
+                }
+
+                Cursor cursor = helper.ConsultaUsuPass(etusu.getText().toString(), etcon.getText().toString());
+
+                if (cursor.getCount()>0) {
+                    Intent i = new Intent(getApplicationContext(), Principal.class);
+                    startActivity(i);
+                }else{
+                   // Toast.makeText(getApplicationContext(), "Datos Incorrectos", Toast.LENGTH_LONG).show();
+                }
+                etusu.setText("");
+                etcon.setText("");
+                etusu.findFocus();
+
+
+            }
+        });
+    }
+
+    public void PantallaRegistro(){
+        TextView registro = (TextView)findViewById(R.id.tv_registrate);
+
+        registro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), Registrate.class);
+                startActivity(i);
+            }
+        });
+    }
+
+}
