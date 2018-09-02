@@ -1,0 +1,52 @@
+public class SQLite_OpenHelper extends SQLiteOpenHelper {
+    public SQLite_OpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+    String query="create table usuarioslogin(_ID integer primary key autoincrement, Nombre text, " +
+            "Apellido text, Pais text, Ciudad text, Correo text, Contra text);";
+        db.execSQL(query);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+    }
+
+    //METODO QUE PERMITE ABRIR LA BD
+    public void AbrirBd(){
+        this.getWritableDatabase();
+    }
+
+    // METODOS QUE PERMITE CERRAR LA BD
+    public void CerrarBd(){
+        this.close();
+    }
+
+    // METODO QUE PERMITE INSERTAR REGISTROS EN LA TABLA USUARIOSLOGIN
+    public  void InsertarRegistros (String nom, String ape, String pai, String ciu, String cor, String con){
+        ContentValues valores = new ContentValues();
+        valores.put("Nombre", nom);
+        valores.put("Apellido", ape);
+        valores.put("Pais", pai);
+        valores.put("Ciudad", ciu);
+        valores.put("Correo", cor);
+        valores.put("Contra", con);
+        this.getWritableDatabase().insert("usuarioslogin", null, valores);
+    }
+
+    // METODO QUE PERMITE VALIDAR SI EL USUARIO EXISTE
+    public Cursor ConsultaUsuPass (String usu, String pass){
+        Cursor mcursor=null;
+
+        mcursor=this.getReadableDatabase().query("usuarioslogin", new String[]{"_ID", "Nombre",
+                "Apellido", "Pais", "Ciudad", "Correo", "Contra"}, "Correo like '"+usu+"' " +
+                "and Contra like '"+pass+"'",null, null, null, null);
+        
+        return mcursor;
+
+    }
+
+}
