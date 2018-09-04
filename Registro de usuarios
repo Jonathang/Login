@@ -25,12 +25,13 @@ public class Registrate extends AppCompatActivity {
             public void onClick(View view) {
                 //PROCEDER ABRIR LA BASE DE DATOS PARA PODER INSERTAR LOS REGISTROS
                 helper.AbrirBd();
-                helper.InsertarRegistros(String.valueOf(etnombre.getText()),
+                 helper.InsertarRegistros(String.valueOf(etnombre.getText()),
                         String.valueOf(etapellido.getText()),
                         String.valueOf(etpais.getText()),
                         String.valueOf(etciudad.getText()),
                         String.valueOf(etcorreo.getText()),
-                        String.valueOf(etcontra.getText()));
+                        String.valueOf(etcontra.getText()),
+                        String.valueOf(etconfirmar));
                 helper.CerrarBd();
 
                 Toast.makeText(getApplicationContext(), "Registro Exitoso!", Toast.LENGTH_SHORT).show();
