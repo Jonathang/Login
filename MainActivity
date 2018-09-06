@@ -1,10 +1,9 @@
 public class MainActivity extends AppCompatActivity {
 
-    Button btningresar;
-    EditText etusu, etcon;
+    Button btnprincipal;
+    EditText etusu, etpass;
 
     SQLite_OpenHelper helper = new SQLite_OpenHelper(this, "BD1", null, 1);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,50 +12,52 @@ public class MainActivity extends AppCompatActivity {
 
         PantallaRegistro();
 
-        btningresar = findViewById(R.id.btn_entrar);
-        btningresar.setOnClickListener(new View.OnClickListener() {
+        btnprincipal= findViewById(R.id.btn_entrarprincipal);
+        btnprincipal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                etusu = findViewById(R.id.et_usuinicio);
-                etcon = findViewById(R.id.et_coninicio);
+                etusu = findViewById(R.id.et_correoinicio);
+                etpass = findViewById(R.id.et_contrainicio);
 
-                //VALIDA QUE EL CAMPO CORREO NO ESTE VACIO
-                if(etusu.length() == 0){
-                    Toast.makeText(getApplicationContext(), "Debes ingresar un Correo", Toast.LENGTH_LONG).show();
-                }
+                try {
+                    Cursor cursor = helper.ConsultaUsuContra(etusu.getText().toString().trim(), etpass.getText().toString().trim());
 
-                // VALIDA QUE EL CAMPO CONTRASEÑA NO ESTE VACIO
-                if (etcon.length() ==0){
-                    Toast.makeText(getApplicationContext(), "Debes ingresar una Contraseña", Toast.LENGTH_LONG).show();
-                }
+                    if(etusu.length()==0){
+                        Toast.makeText(getApplicationContext(), "Ingrese un correo", Toast.LENGTH_LONG).show();
+                    }
 
-                Cursor cursor = helper.ConsultaUsuPass(etusu.getText().toString(), etcon.getText().toString());
+                    if (etpass.length()==0){
+                        Toast.makeText(getApplicationContext(), "Ingresa una contraseña", Toast.LENGTH_LONG).show();
 
-                if (cursor.getCount()>0) {
-                    Intent i = new Intent(getApplicationContext(), Principal.class);
-                    startActivity(i);
-                }else{
-                   // Toast.makeText(getApplicationContext(), "Datos Incorrectos", Toast.LENGTH_LONG).show();
-                }
+                    }else if(cursor.getCount()>0){
+                        Intent i = new Intent(getApplicationContext(), Principal.class);
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Datos Incorrectos", Toast.LENGTH_LONG).show();
+                    }
+
                 etusu.setText("");
-                etcon.setText("");
+                etpass.setText("");
                 etusu.findFocus();
 
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
 
             }
         });
+
     }
 
-    public void PantallaRegistro(){
-        TextView registro = (TextView)findViewById(R.id.tv_registrate);
+    public void PantallaRegistro() {
+        TextView registro = findViewById(R.id.tv_registrate);
 
         registro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Registrate.class);
+                Intent i = new Intent(getApplicationContext(), Registrar.class);
                 startActivity(i);
             }
         });
     }
-
 }
